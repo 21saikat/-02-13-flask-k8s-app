@@ -1,0 +1,19 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Code checkout করো
+      uses: actions/checkout@v3
+
+    - name: Docker build করো
+      run: docker build -t flask-app .
+
+    - name: Test করো
+      run: docker run flask-app python -c "import flask; print('Flask OK!')"
