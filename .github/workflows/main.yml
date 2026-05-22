@@ -17,3 +17,17 @@ jobs:
 
     - name: Test করো
       run: docker run flask-app python -c "import flask; print('Flask OK!')"
+
+    - name: Deploy to Azure VM
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VMHOST }}
+        username: ${{ secrets.VMUSER }}
+        password: ${{ secrets.VMPASSWORD }}
+        script: |
+          cd ~/myapp
+          git pull origin main
+          docker build -t flask-app .
+          docker stop saikat-app || true
+          docker rm saikat-app || true
+          docker run -d --name saikat-app -p 5000:5000 flask-app
